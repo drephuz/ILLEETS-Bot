@@ -19,7 +19,7 @@ const client = new Client({
 });
 
 //On connect, confirm connection with Bot's name.  Bot>Token must be supplied in config.json
-//All modules are called here.  Using config.json to enable each module after confirming required 
+//All modules are called here. Using config.json to enable each module after confirming required 
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
