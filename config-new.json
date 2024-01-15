@@ -9,7 +9,7 @@
         "roleNames": ["ROLE1", "ROLE2"],
         "reactionEmojis": ["👍", "👎"]
     },
-    "checkTwitchStream": {
+    "discordStreamers": {
         "enabled": false,
         "roleId": "ENTER ROLE ID FOR CHECK TWITCH STREAMS",
         "channelId": "ENTER CHANNEL ID TO USE FOR ANNOUNCEMENTS FOR TWITCH STREAMS"
