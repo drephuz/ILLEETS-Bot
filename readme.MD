@@ -2,8 +2,8 @@
 
 **Prerequisites:**
 
-Node.js 20
-Discord.js 14.14 (npm install discord.js)
+Node.js 20\n
+Discord.js 14.14 (npm install discord.js)\n
 MongoDB setup with no authentication (install mongodb application AND npm install mongodb)
 
 **NOTE:** *MUST RENAME `config-new.json` TO `config.json` AND PROVIDE YOUR BOT KEY AND ADDITIONAL CONFIGURATIONS, INCLUDING ENABLING EACH MODULE.  ALL MODULES ARE DISABLED BY DEFAULT, AND ONLY CONNECTION IS TESTED.*
