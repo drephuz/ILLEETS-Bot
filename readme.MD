@@ -15,7 +15,7 @@ __Current Features:__
 **Discord Streamers**: 
 
 *NOTE*:
-REQUIRES MONGODB DEFAULT SETUP AND CONNECTION STRING
+REQUIRES MONGODB DEFAULT SETUP AND CONNECTION STRING!
 *MAY REQUIRE A DB TITLED "TwitchMsgDb", BUT MAY AUTOMATICALLY CREATE ONE, **NOT TESTED.***
 
 Will check everyone in a specific role for the "Streaming" activity in Discord.  Meaning the user will have to link their streaming (Twitch, or any other service that triggers the "Streaming" activity in Discord) account to be considered for shoutouts. This will, by default, @ the role in the shoutout, to notify other users in the role that someone is streaming.  Specific Channel ID required for shoutouts.  Messages will be deleted when the user is no longer showing as "Streaming" in Discord Activity feeds.
