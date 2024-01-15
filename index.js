@@ -23,6 +23,7 @@ const client = new Client({
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
+    //add additional modules per line after requiring them at the top of the script.  You will likely need to also add additional configuration lines to the config.json
     reactionRoles(client, config.reactionRoles);
     checkTwitchStream(client, config.discordStreamers);
     diceRoll(client, config.diceRoll);
