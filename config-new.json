@@ -1,0 +1,21 @@
+{
+    "bot": {
+        "token": "ENTER BOT TOKEN HERE"
+    },
+    "reactionRoles": {
+        "enabled": false,
+        "channelId": "ENTER CHANNEL ID TO USE FOR REACTION ROLES",
+        "messageId": "ENTER SPECIFIC MESSAGE ID FOR REACTION ROLES",
+        "roleNames": ["ROLE1", "ROLE2"],
+        "reactionEmojis": ["👍", "👎"]
+    },
+    "checkTwitchStream": {
+        "enabled": false,
+        "roleId": "ENTER ROLE ID FOR CHECK TWITCH STREAMS",
+        "channelId": "ENTER CHANNEL ID TO USE FOR ANNOUNCEMENTS FOR TWITCH STREAMS"
+    },
+    "diceRoll": {
+        "enabled": false,
+        "channelId": ""
+    }
+}
