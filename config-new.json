@@ -1,6 +1,8 @@
 {
     "bot": {
-        "token": "ENTER BOT TOKEN HERE"
+        "token": "ENTER BOT TOKEN HERE",
+        "applicationId": "ENTER APPLICATION ID HERE",
+        "guildId": "ENTER DISCORD SERVER/GUILD ID HERE"
     },
     "reactionRoles": {
         "enabled": false,
