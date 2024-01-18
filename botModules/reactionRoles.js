@@ -45,7 +45,9 @@ module.exports = async (client, config) => {
                         return;
                     }
 
-                    const member = await reaction.message.guild.members.fetch(user.id);
+                    const member = await reaction.message.guild.members.fetch(
+                        user.id
+                    );
                     member.roles.add(role).catch(console.error);
                     console.log(`Role "${roleName}" added to user ${user.tag}`);
                 }

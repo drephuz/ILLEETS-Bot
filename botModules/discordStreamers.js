@@ -13,7 +13,7 @@ module.exports = async (client, config) => {
         const announcementChannel = await client.channels.fetch(
             announcementChannelId
         );
-        
+
         let db;
         try {
             await mongoClient.connect();
@@ -24,12 +24,9 @@ module.exports = async (client, config) => {
             return;
         }
 
-
-
         const streamCollection = db.collection("streams"); // Collection for tracking streams
 
         setInterval(async () => {
-            console.log("Checking for streams...");
 
             try {
                 await guild.members.fetch(); // Fetch all members of the guild

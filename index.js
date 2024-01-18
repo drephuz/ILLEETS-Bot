@@ -1,17 +1,18 @@
-//initializing configuration and modules into variables.
-const config = require('./config.json');
-const { Client, GatewayIntentBits } = require('discord.js');
+// Importing configuration and required libraries
+const config = require("./config.json");
+const { Client, GatewayIntentBits } = require("discord.js");
 
-//load modules
-const reactionRoles = require('./botModules/reactionRoles');
-const checkTwitchStream = require('./botModules/discordStreamers');
-const xpRoles = require('./botModules/xpRoles');
-//load commands
-const diceRoll = require('./commands/diceRoll');
-const serverXp = require('./commands/serverXp');
-const registerCommands = require('./commands/registerCommands');
+// Importing bot modules
+const reactionRoles = require("./botModules/reactionRoles");
+const checkTwitchStream = require("./botModules/discordStreamers");
+const xpRoles = require("./botModules/xpRoles");
 
-//creating Discord Client and claiming bot intents. Look up Discord Bot Intents for clarification
+// Importing commands
+const diceRoll = require("./commands/diceRoll");
+const serverXp = require("./commands/serverXp");
+const registerCommands = require("./commands/registerCommands");
+
+// Creating Discord Client with necessary intents
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -19,30 +20,37 @@ const client = new Client({
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.MessageContent,
     ],
-    partials: ['MESSAGE', 'CHANNEL', 'REACTION']
+    partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
 
-//On connect, confirm connection with Bot's name.  Bot>Token must be supplied in config.json
-//All modules are called here. Using config.json to enable each module after confirming required 
-client.once('ready', async () => {
+// Client's 'ready' event handler
+client.once("ready", async () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
+    // Initializing modules
     reactionRoles(client, config.reactionRoles);
     checkTwitchStream(client, config.discordStreamers);
-    xpRoles(client, config);
 
+    // Setup xpRoles module
+    if (config.xpRoles.enabled) {
+        xpRoles.setup(client, config.xpRoles);
+    }
+
+    // Initializing commands
     diceRoll(client, config);
     serverXp(client, config);
 
-    //temporary delay until I figure out how to wait for all modules to load
+    // Register commands after a delay
     setTimeout(async () => {
-        await registerCommands.register(config.bot.applicationId, config.bot.guildId, config.bot.token);
+        await registerCommands.register(
+            config.bot.applicationId,
+            config.bot.guildId,
+            config.bot.token
+        );
     }, 1000); // Delay in milliseconds (1000 milliseconds = 1 second)
-    
 });
 
-
-//Actually connect to Discord.  The bot must have joined the server as scope=bot and permissions=8 (Administator)
+// Log in to Discord with the bot's token
 client.login(config.bot.token);

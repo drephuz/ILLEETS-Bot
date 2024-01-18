@@ -18,6 +18,15 @@
     },
     "diceRoll": {
         "enabled": false,
-        "channelId": ""
+        "channelId": "UNUSED AT THIS TIME"
+    },
+    "xpRoles": {
+        "enabled": true,
+        "channelId": "UNUSED AT THIS TIME",
+        "roleNames": ["Inactive", "Active", "Very Chatty", "Living Here"]
+    },
+    "xpServer": {
+        "enabled": true,
+        "channelId": "UNUSED AT THIS TIME"
     }
 }
