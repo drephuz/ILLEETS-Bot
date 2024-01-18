@@ -23,3 +23,5 @@ REQUIRES MONGODB DEFAULT SETUP AND CONNECTION STRING!
 Will check everyone in a specific role for the "Streaming" activity in Discord.  Meaning the user will have to link their streaming (Twitch, or any other service that triggers the "Streaming" activity in Discord) account to be considered for shoutouts. This will, by default, @ the role in the shoutout, to notify other users in the role that someone is streaming.  Specific Channel ID required for shoutouts.  Messages will be deleted when the user is no longer showing as "Streaming" in Discord Activity feeds.
 
 **Dice Roll:** Slash command (/roll) commands.  These include /roll d20; /roll d (1-100 sides); /roll n (1-100 for sides and dice); /roll advantage/disadvantage.  All of which can take up to 5 modifiers, ex: /roll + 1 + 2 + 5 - 2 + 7.  Modifiers cannot exceed values greater than 100 or less than -100. 
+
+**XP Chat System** (WIP): Awards XP for chatting, removes XP at a fixed interval to handle inactive users. Awards 4 roles, Inactive, Active, Very Chatty, Living Here.  Can be modified directly in the xpRoles/serverXP modules respectively, will add proper configuration at a later time.
