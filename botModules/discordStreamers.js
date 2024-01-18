@@ -5,16 +5,6 @@ module.exports = async (client, config) => {
         const { MongoClient } = require("mongodb");
         const mongoClient = new MongoClient("mongodb://localhost:27017");
 
-        let db;
-        try {
-            await mongoClient.connect();
-            console.log("Connected to MongoDB");
-            db = mongoClient.db("twitchMsgDb");
-        } catch (error) {
-            console.error("Failed to connect to MongoDB:", error);
-            return;
-        }
-
         console.log("Discord Streamers module loaded");
         const roleId = config.roleId;
         const announcementChannelId = config.channelId;
@@ -23,6 +13,18 @@ module.exports = async (client, config) => {
         const announcementChannel = await client.channels.fetch(
             announcementChannelId
         );
+        
+        let db;
+        try {
+            await mongoClient.connect();
+            console.log("Connected to MongoDB for Discord Streamers");
+            db = mongoClient.db("twitchMsgDb");
+        } catch (error) {
+            console.error("Failed to connect to MongoDB:", error);
+            return;
+        }
+
+
 
         const streamCollection = db.collection("streams"); // Collection for tracking streams
 
