@@ -15,7 +15,6 @@ const setup = async (discordClient, moduleConfig) => {
 };
 
 const updateMemberRoles = async (guildId, memberId, xp) => {
-    console.log("Updating member roles...");
 
     if (!mongoClient.isConnected) {
         await mongoClient.connect();
@@ -26,7 +25,7 @@ const updateMemberRoles = async (guildId, memberId, xp) => {
     if (!member) return;
 
     // Define role names
-    const roleNames = ["Inactive", "Active", "Very Chatty", "Living Here"];
+    const roleNames = config.roleNames;
 
     // Determine new role based on XP
     let newRoleName = "";
