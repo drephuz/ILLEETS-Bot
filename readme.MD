@@ -24,4 +24,4 @@ Will check everyone in a specific role for the "Streaming" activity in Discord. 
 
 **Dice Roll:** Slash command (/roll) commands.  These include /roll d20; /roll d (1-100 sides); /roll n (1-100 for sides and dice); /roll advantage/disadvantage.  All of which can take up to 5 modifiers, ex: /roll + 1 + 2 + 5 - 2 + 7.  Modifiers cannot exceed values greater than 100 or less than -100. 
 
-**XP Chat System** (WIP): Awards XP for chatting, removes XP at a fixed interval to handle inactive users. Awards 4 roles, Inactive, Active, Very Chatty, Living Here.  Can be modified directly in the xpRoles/serverXP modules respectively, will add proper configuration at a later time.
+**XP Chat System**: Awards XP for chatting, removes XP at a fixed interval to handle inactive users. Awards 4 roles, All configured in config.json in an array, by name.  Channel ID for announcements required in config.json.
