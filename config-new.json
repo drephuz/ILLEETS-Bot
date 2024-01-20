@@ -28,5 +28,11 @@
     "xpServer": {
         "enabled": true,
         "channelId": "UNUSED AT THIS TIME"
+    },
+    "openAiResponses": {
+        "enabled": true,
+        "chatChannelId": "YOUR_DISCORD_CHANNEL_ID",
+        "openAIKey": "YOUR_OPENAI_API_KEY",
+        "personality": "Snarky"
     }
 }

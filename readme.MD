@@ -25,3 +25,5 @@ Will check everyone in a specific role for the "Streaming" activity in Discord. 
 **Dice Roll:** Slash command (/roll) commands.  These include /roll d20; /roll d (1-100 sides); /roll n (1-100 for sides and dice); /roll advantage/disadvantage.  All of which can take up to 5 modifiers, ex: /roll + 1 + 2 + 5 - 2 + 7.  Modifiers cannot exceed values greater than 100 or less than -100. 
 
 **XP Chat System**: Awards XP for chatting, removes XP at a fixed interval to handle inactive users. Awards 4 roles, All configured in config.json in an array, by name.  Channel ID for announcements required in config.json.
+
+**Open AI Chat Bot**(WIP): Chat bot that responds to @ mentions and replies to the bot.

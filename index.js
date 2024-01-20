@@ -1,11 +1,13 @@
 // Importing configuration and required libraries
 const config = require("./config.json");
 const { Client, GatewayIntentBits } = require("discord.js");
+const { OpenAIApi } = require("openai");
 
 // Importing bot modules
 const reactionRoles = require("./botModules/reactionRoles");
 const checkTwitchStream = require("./botModules/discordStreamers");
 const xpRoles = require("./botModules/xpRoles");
+const openAiResponses = require('./botModules/openAiResponses');
 
 // Importing commands
 const diceRoll = require("./commands/diceRoll");
@@ -32,6 +34,7 @@ client.once("ready", async () => {
     // Initializing modules
     reactionRoles(client, config.reactionRoles);
     checkTwitchStream(client, config.discordStreamers);
+    openAiResponses(client, config.openAiResponses);
 
     // Setup xpRoles module
     if (config.xpRoles.enabled) {
