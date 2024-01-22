@@ -158,7 +158,8 @@ function censorTerm(term) {
 }
 
 function checkBlockedTerms(content, terms) {
-    return terms.find(term => content.includes(term));
+    const lowerCaseContent = content.toLowerCase();
+    return terms.find(term => lowerCaseContent.includes(term.toLowerCase()));
 }
 
 async function handleWarning(interaction, userId, warningsCollection) {

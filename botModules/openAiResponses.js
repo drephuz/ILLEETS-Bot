@@ -2,36 +2,33 @@ const OpenAI = require("openai");
 
 // Define an array of the top 50 scripting languages
 const scriptLanguages = [
-    "JavaScript", "Python", "Ruby", "PHP", "Perl",
-    "Lua", "Bash", "Shell", "PowerShell", "TypeScript",
+    "javascript", "python", "ruby", "php", "perl",
+    "lua", "bash", "shell", "powershell", "typescript",
     "html", "css", "c#", "js", "story", "script", "code"
-];
+].map(lang => lang.toLowerCase());
 
-const triggerTerms = ["generate", "make", "create", "build", "compose", "formulate"];
+const triggerTerms = ["generate", "make", "create", "build", "compose", "formulate"]
+    .map(term => term.toLowerCase());
 
 module.exports = async (client, config) => {
     if (config.enabled === true) {
         console.log("ChatGPT Response module loaded");
 
-        // Initialize OpenAI client
         const openai = new OpenAI({
             apiKey: config.openAIKey,
         });
 
-        // Discord client setup
         const guild = client.guilds.cache.first(); 
         const channelId = config.channelId; 
         const channel = await client.channels.fetch(channelId);
 
-        // Listen for messages
         client.on("messageCreate", async (message) => {
             if (message.author.bot) return;
-            if (message.channel.id !== channelId) return;
+            if (message.channel.id.toLowerCase() !== channelId) return;
             if (!message.mentions.has(client.user.id)) return;
 
-            const userMessage = message.content.replace(new RegExp(`<@!?${client.user.id}>`, 'g'), '').trim();
+            const userMessage = message.content.replace(new RegExp(`<@!?${client.user.id}>`, 'g'), '').trim().toLowerCase();
 
-            // Check for "generate" and any scripting language
             if (triggerTerms.some(term => userMessage.includes(term)) && scriptLanguages.some(lang => userMessage.includes(lang))) {
                 const noGif = await findNoGif();
                 await channel.send({ files: [noGif] });
