@@ -12,8 +12,8 @@ __**Prerequisites:**__
 
 ***Your Own Discord Server to which you are Admin/Owner*** - https://discord.com/
 
-***OPTIONAL** - (Required for Open AI Chat Bot)* \n
-*-Open AI API Key\n
+***OPTIONAL** - (Required for Open AI Chat Bot)* 
+*-Open AI API Key*
 *-Install node openai package (npm install openai)*
 
 __**NOTE:**__ *MUST RENAME `config-new.json` TO `config.json` AND PROVIDE YOUR BOT KEY AND ADDITIONAL CONFIGURATIONS, INCLUDING ENABLING EACH MODULE.  ALL MODULES ARE DISABLED BY DEFAULT, AND ONLY CONNECTION IS TESTED.*
