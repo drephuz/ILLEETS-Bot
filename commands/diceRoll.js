@@ -83,9 +83,8 @@ module.exports = (client, config) => {
     client.on("interactionCreate", async (interaction) => {
         if (!interaction.isCommand() || interaction.commandName !== "roll")
             return;
-
+    
         const subcommand = interaction.options.getSubcommand(false);
-
         let numDice = 1,
             diceSides = 20,
             rolls = [],
@@ -93,40 +92,33 @@ module.exports = (client, config) => {
             resultText = "";
         let modifiers =
             interaction.options.getString("modifiers")?.split(" ") || [];
-
-        // Default to a single d20 roll if no subcommand is provided
-        if (!subcommand) {
-            rolls.push(rollDice(20));
-        } else {
-            switch (subcommand) {
-                case "d":
-                    diceSides = interaction.options.getInteger("sides");
+    
+        switch (subcommand) {
+            case "d":
+                diceSides = interaction.options.getInteger("sides");
+                rolls.push(rollDice(diceSides));
+                resultText = `You rolled a D${diceSides}: `;
+                break;
+            case "n":
+                numDice = interaction.options.getInteger("number");
+                diceSides = interaction.options.getInteger("sides");
+                for (let i = 0; i < numDice; i++) {
                     rolls.push(rollDice(diceSides));
-                    break;
-                case "n":
-                    numDice = interaction.options.getInteger("number");
-                    diceSides = interaction.options.getInteger("sides");
-                    for (let i = 0; i < numDice; i++) {
-                        rolls.push(rollDice(diceSides));
-                    }
-                    break;
-                case "advantage":
-                    rolls.push(rollDice(20), rollDice(20));
-                    resultText += `Rolled with advantage: (${rolls.join(
-                        ", "
-                    )})\n`;
-                    rolls = [Math.max(...rolls)];
-                    break;
-                case "disadvantage":
-                    rolls.push(rollDice(20), rollDice(20));
-                    resultText += `Rolled with disadvantage: (${rolls.join(
-                        ", "
-                    )})\n`;
-                    rolls = [Math.min(...rolls)];
-                    break;
-            }
+                }
+                resultText = `You rolled ${numDice} D${diceSides}'s: `;
+                break;
+            case "advantage":
+                rolls.push(rollDice(20), rollDice(20));
+                resultText = `You rolled 2 D20's with advantage: `;
+                rolls = [Math.max(...rolls)];
+                break;
+            case "disadvantage":
+                rolls.push(rollDice(20), rollDice(20));
+                resultText = `You rolled 2 D20's with disadvantage: `;
+                rolls = [Math.min(...rolls)];
+                break;
         }
-
+    
         // Process rolls and modifiers
         totalRoll = rolls.reduce((acc, roll) => acc + roll, 0);
         let modifierTotal = processModifiers(modifiers);
@@ -137,18 +129,11 @@ module.exports = (client, config) => {
             return;
         }
         if (modifiers.length > 0 && modifierTotal !== 0) {
-            totalRoll += modifierTotal;
-            resultText += `Roll(s): ${rolls.join(
-                " + "
-            )}\nModifier(s): ${modifiers.join(
-                " "
-            )} = ${modifierTotal}\nTotal Result: ${totalRoll}`;
+            resultText += `${rolls.join(" + ")}\nModifier(s): ${modifiers.join(" ")} = ${modifierTotal}\nTotal Result: ${totalRoll}`;
         } else {
-            resultText += `Roll(s): ${rolls.join(
-                " + "
-            )}\nTotal Result: ${totalRoll}`;
+            resultText += `${rolls.join(" + ")}\nTotal Result: ${totalRoll}`;
         }
-
+    
         await interaction.reply(resultText);
     });
 

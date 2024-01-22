@@ -61,10 +61,14 @@ module.exports = async (client, config) => {
     
         // Registering commands
         const xpCommands = [
-            // Separate command for checking XP
             new SlashCommandBuilder()
                 .setName("xpcheck")
-                .setDescription("Check your XP")
+                .setDescription("Check a user's XP")
+                .addUserOption(option => 
+                    option.setName("user")
+                        .setDescription("The user whose XP you want to check")
+                        .setRequired(true)
+                )
                 .toJSON(),
     
             // Other XP commands
@@ -112,11 +116,12 @@ module.exports = async (client, config) => {
         // Interaction handler
         client.on("interactionCreate", async (interaction) => {
             if (!interaction.isCommand()) return;
-    
+        
             if (interaction.commandName === "xpcheck") {
-                // Handle 'xpcheck' command
-                const xp = await getUserXp(interaction.user.id);
-                await interaction.reply(`You have ${xp} XP.`);
+                const targetUser = interaction.options.getUser("user");
+                const xp = await getUserXp(targetUser.id);
+                // Update the reply to mention the user
+                await interaction.reply(`<@${targetUser.id}> has ${xp} XP.`);
             } else if (interaction.commandName === "xp") {
                 // Restrict 'xp' subcommands to moderators
     
