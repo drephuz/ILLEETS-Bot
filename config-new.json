@@ -34,5 +34,16 @@
         "chatChannelId": "YOUR_DISCORD_CHANNEL_ID",
         "openAIKey": "YOUR_OPENAI_API_KEY",
         "personality": "Snarky"
+    },
+    "autoMod": {
+        "enabled": true,
+        "blockedTerms": {
+            "enabled": false,
+            "terms": ["weaveloid","togemii","trudici"]
+        },
+        "bannableTerms": {
+            "enabled": false,
+            "terms": ["borkedy", "gorgidy", "gooeyjaw"]
+        }
     }
 }

@@ -1,5 +1,5 @@
 module.exports = (client, config) => {
-    console.log("Example Command module loaded");
+    console.log("Dice Roll module loaded");
     const { SlashCommandBuilder } = require("@discordjs/builders");
     const registerCommands = require("./registerCommands");
 

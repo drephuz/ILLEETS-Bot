@@ -1,7 +1,4 @@
 const OpenAI = require("openai");
-const AVERAGE_WORD_LENGTH = 4.7; // Average English word length including spaces
-const MAX_WORDS_PER_MESSAGE = 200; // Target maximum words per message
-const MAX_MESSAGE_LENGTH = 2000; // Maximum characters per message
 
 // Define an array of the top 50 scripting languages
 const scriptLanguages = [
@@ -9,6 +6,8 @@ const scriptLanguages = [
     "Lua", "Bash", "Shell", "PowerShell", "TypeScript",
     "html", "css", "c#", "js", "story", "script", "code"
 ];
+
+const triggerTerms = ["generate", "make", "create", "build", "compose", "formulate"];
 
 module.exports = async (client, config) => {
     if (config.enabled === true) {
@@ -33,27 +32,23 @@ module.exports = async (client, config) => {
             const userMessage = message.content.replace(new RegExp(`<@!?${client.user.id}>`, 'g'), '').trim();
 
             // Check for "generate" and any scripting language
-            if (userMessage.includes("generate") || userMessage.includes("make") && scriptLanguages.some(lang => userMessage.includes(lang))) {
-                // Send a random "No" GIF
-                const noGif = await findNoGif(); // Implement findNoGif to get a random "No" GIF
+            if (triggerTerms.some(term => userMessage.includes(term)) && scriptLanguages.some(lang => userMessage.includes(lang))) {
+                const noGif = await findNoGif();
                 await channel.send({ files: [noGif] });
                 return;
             }
 
-            // Check if the user message contains at least 2 words
             if (userMessage.split(/\s+/).length < 2) {
                 await channel.send("I need more than that to work with...");
                 return;
             }
 
             try {
-                const botMember = guild.members.cache.get(client.user.id);
-                const botNickname = botMember ? botMember.displayName : client.user.username;
                 const personality = config.personality ? `Personality: ${config.personality}. ` : "";
-                let promptMessage = `${personality}${userMessage}`;
+                let promptMessage = `Give a summarized ${personality}response to this request, and remember to never admit you are AI:\n\n${userMessage}`;
 
-                // Calculate max_tokens for an average of 200 words per message
-                const max_tokens = Math.round((MAX_WORDS_PER_MESSAGE * AVERAGE_WORD_LENGTH) / 4.7); 
+                // Indicate the bot is typing while waiting for a response
+                await channel.sendTyping();
 
                 const gptResponse = await openai.chat.completions.create({
                     model: "gpt-3.5-turbo",
@@ -61,22 +56,19 @@ module.exports = async (client, config) => {
                         "role": "user",
                         "content": promptMessage
                     }],
-                    max_tokens: max_tokens,
+                    temperature: 0.7
                 });
 
                 if (gptResponse.choices && gptResponse.choices.length > 0) {
                     let responseContent = gptResponse.choices[0].message.content;
-                    responseContent = responseContent.replace(/\bAI\b/gi, "UberHuman");
-                    responseContent = responseContent.replace(/language model/gi, "set of random code and logic");
 
-                    // Ensure the response does not exceed 2000 characters
-                    if (responseContent.length > MAX_MESSAGE_LENGTH) {
-                        responseContent = responseContent.substring(0, MAX_MESSAGE_LENGTH);
-                    }
-
-                    // Send the response in one message
-                    if (responseContent) {
-                        await channel.send(responseContent);
+                    const responseChunks = splitIntoChunks(responseContent, 2000);
+                    for (let i = 0; i < responseChunks.length; i++) {
+                        if (i === 0) {
+                            await message.reply(responseChunks[i]);
+                        } else {
+                            await channel.send(responseChunks[i]);
+                        }
                     }
                 }
             } catch (error) {
@@ -87,7 +79,13 @@ module.exports = async (client, config) => {
 };
 
 async function findNoGif() {
-    // Implementation to fetch and return a random "No" GIF URL
-    // This could use Discord's image search or any other GIF service API
     return 'https://media.tenor.com/1BTOV40oG_0AAAAM/pernalonga-meme-pernalonga-no.gif';
+}
+
+function splitIntoChunks(str, maxSize) {
+    const chunks = [];
+    for (let i = 0; i < str.length; i += maxSize) {
+        chunks.push(str.substring(i, i + maxSize));
+    }
+    return chunks;
 }

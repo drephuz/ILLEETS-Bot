@@ -8,6 +8,7 @@ const reactionRoles = require("./botModules/reactionRoles");
 const checkTwitchStream = require("./botModules/discordStreamers");
 const xpRoles = require("./botModules/xpRoles");
 const openAiResponses = require('./botModules/openAiResponses');
+const autoMod = require('./botModules/autoMod');
 
 // Importing commands
 const diceRoll = require("./commands/diceRoll");
@@ -35,6 +36,7 @@ client.once("ready", async () => {
     reactionRoles(client, config.reactionRoles);
     checkTwitchStream(client, config.discordStreamers);
     openAiResponses(client, config.openAiResponses);
+    autoMod(client, config.autoMod);
 
     // Setup xpRoles module
     if (config.xpRoles.enabled) {
