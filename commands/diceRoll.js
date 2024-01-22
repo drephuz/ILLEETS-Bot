@@ -1,11 +1,8 @@
 module.exports = (client, config) => {
+    if (config.enabled === true) {
     console.log("Dice Roll module loaded");
     const { SlashCommandBuilder } = require("@discordjs/builders");
     const registerCommands = require("./registerCommands");
-
-    const clientId = config.bot.applicationId; // Your bot's client ID
-    const guildId = config.bot.guildId; // Your guild's ID
-    const token = config.bot.token;
 
     const rollCommands = [
         new SlashCommandBuilder()
@@ -192,3 +189,4 @@ module.exports = (client, config) => {
 
     // Additional utility functions (formatRollResults, processModifiers, etc.) from your second script
 };
+}

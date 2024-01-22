@@ -44,7 +44,7 @@ client.once("ready", async () => {
     }
 
     // Initializing commands
-    diceRoll(client, config);
+    diceRoll(client, config.diceRoll);
     serverXp(client, config);
 
     // Register commands after a delay
