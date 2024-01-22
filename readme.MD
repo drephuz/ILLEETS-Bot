@@ -27,3 +27,5 @@ Will check everyone in a specific role for the "Streaming" activity in Discord. 
 **XP Chat System**: Awards XP for chatting, removes XP at a fixed interval to handle inactive users. Awards 4 roles, All configured in config.json in an array, by name.  Channel ID for announcements required in config.json.
 
 **Open AI Chat Bot**(WIP): Chat bot that responds to @ mentions and replies to the bot.
+
+**AutoMod**: Dual list for blockedTerms and bannableTerms.  Logic handled as mentioned in prior notes.  Will update this all when I'm done done.
