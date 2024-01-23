@@ -116,6 +116,7 @@ __**NOTE:**__ *YOU MUST RENAME `config-new.json` TO `config.json` AND PROVIDE YO
 - Chat bot that responds to @ mentions and replies to the bot. 
 - Must be configured with personal Open AI API key, and chosen personality.  
 - Designed to give short responses around a specific personality, and to never admit that it is a robot.
+- If channelId is specified, the bot will only reply in that channel, otherwise it will reply to any @ mention or reply.
 
 
 
