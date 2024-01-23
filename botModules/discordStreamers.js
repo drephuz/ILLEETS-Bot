@@ -7,12 +7,13 @@ module.exports = async (client, config) => {
 
         console.log("Discord Streamers module loaded");
         const roleId = config.roleId;
+        const specialRoleId = config.specialRoleId; // Additional role for special shoutouts
+        const inactiveRoleId = config.inactiveRoleId; // Role ID for inactive members
         const announcementChannelId = config.channelId;
+        const specialAnnouncementChannelId = config.specialChannelId; // Channel for special shoutouts
         const guild = client.guilds.cache.first(); // Assuming the bot is in one guild
-        const role = guild.roles.cache.get(roleId);
-        const announcementChannel = await client.channels.fetch(
-            announcementChannelId
-        );
+        const announcementChannel = await client.channels.fetch(announcementChannelId);
+        const specialAnnouncementChannel = specialRoleId ? await client.channels.fetch(specialAnnouncementChannelId) : null; // Fetch channel only if specialRoleId is set
 
         let db;
         try {
@@ -34,6 +35,11 @@ module.exports = async (client, config) => {
                 guild.members.cache
                     .filter((member) => member.roles.cache.has(roleId))
                     .forEach(async (member) => {
+                        // Skip members with the inactive role, if the role ID is provided
+                        if (inactiveRoleId && member.roles.cache.has(inactiveRoleId)) {
+                            return;
+                        }
+
                         const twitchStream = member.presence?.activities.find(
                             (activity) =>
                                 activity.type === ActivityType.Streaming
@@ -46,10 +52,14 @@ module.exports = async (client, config) => {
 
                             // If the member is streaming and not already announced
                             if (!existingStream) {
-                                const messageContent = `<@&${roleId}>\n**${member.user.tag}** is currently streaming on **${twitchStream.name}** \n\n**Stream Title:** *${twitchStream.details}*\n\nStop by now at ${twitchStream.url} !`;
-                                const message = await announcementChannel.send(
-                                    messageContent
-                                );
+                                const baseMessageContent = `<@&${roleId}>\n**${member.user.tag}** is currently streaming on **${twitchStream.name}** \n\n *${twitchStream.details}*\n\nStop by now at ${twitchStream.url} !`;
+                                await announcementChannel.send(baseMessageContent);
+
+                                // Special shoutout for members with the special role, if specialRoleId is set
+                                if (specialRoleId && member.roles.cache.has(specialRoleId) && specialAnnouncementChannel) {
+                                    const specialMessageContent = `🌟 Featured Streamer Alert! 🌟\n${baseMessageContent}`;
+                                    await specialAnnouncementChannel.send(specialMessageContent);
+                                }
 
                                 await streamCollection.insertOne({
                                     memberId: member.id,

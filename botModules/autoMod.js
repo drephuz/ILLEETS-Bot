@@ -67,22 +67,26 @@ module.exports = async (client, config) => {
 
     client.on('messageCreate', async message => {
         if (message.author.bot || !config.enabled) return;
-
+    
+        // Determine if the message is in an ignored category
+        const isIgnoredCategory = config.ignoredCategoryIds.includes(message.channel.parentId);
+    
         // Spam Detection
         const isSpam = await detectSpam(message, messageCache);
         if (isSpam) {
             await handleSpam(message);
             return;
         }
-
-        // Blocked Terms and Bannable Terms Detection
-        if (config.blockedTerms.enabled) {
+    
+        // Blocked Terms Detection (skipped for ignored categories)
+        if (config.blockedTerms.enabled && !isIgnoredCategory) {
             const blockedTerm = checkBlockedTerms(message.content, config.blockedTerms.terms);
             if (blockedTerm) {
                 await handleBlockedTerm(message, blockedTerm, warningsCollection);
             }
         }
-
+    
+        // Bannable Terms Detection (applied to all channels)
         if (config.bannableTerms.enabled) {
             const bannableTerm = checkBlockedTerms(message.content, config.bannableTerms.terms);
             if (bannableTerm) {

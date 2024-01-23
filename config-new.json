@@ -8,35 +8,41 @@
         "enabled": false,
         "channelId": "ENTER CHANNEL ID TO USE FOR REACTION ROLES",
         "messageId": "ENTER SPECIFIC MESSAGE ID FOR REACTION ROLES",
+        "rulesChannelId": "",
+        "rulesRoleId": "",
+        "rulesEmoji": "",
         "roleNames": ["ROLE1", "ROLE2"],
         "reactionEmojis": ["👍", "👎"]
     },
     "discordStreamers": {
         "enabled": false,
-        "roleId": "ENTER ROLE ID FOR CHECK TWITCH STREAMS",
-        "channelId": "ENTER CHANNEL ID TO USE FOR ANNOUNCEMENTS FOR TWITCH STREAMS"
+        "roleId": "ENTER ROLE ID FOR STREAMERS",
+        "channelId": "ENTER ANNOUNCEMENT CHANNEL ID",
+        "specialRoleId": "ENTER ROLE ID (COMBO WITH STREAMERS ID) - LEAVE EMPTY IF UNUSED",
+        "specialChannelId": "ENTER SPECIAL ANNOUNCEMENT CHANNEL ID",
+        "inactiveRoleId": "ENTER ROLE ID TO BE IGNORED FROM DISCORD STREAMERS"
     },
     "diceRoll": {
         "enabled": false,
         "channelId": "UNUSED AT THIS TIME"
     },
     "xpRoles": {
-        "enabled": true,
+        "enabled": false,
         "channelId": "UNUSED AT THIS TIME",
         "roleNames": ["Inactive", "Active", "Very Chatty", "Living Here"]
     },
     "xpServer": {
-        "enabled": true,
+        "enabled": false,
         "channelId": "UNUSED AT THIS TIME"
     },
     "openAiResponses": {
-        "enabled": true,
+        "enabled": false,
         "chatChannelId": "YOUR_DISCORD_CHANNEL_ID",
         "openAIKey": "YOUR_OPENAI_API_KEY",
         "personality": "Snarky"
     },
     "autoMod": {
-        "enabled": true,
+        "enabled": false,
         "blockedTerms": {
             "enabled": false,
             "terms": ["weaveloid","togemii","trudici"]
@@ -44,6 +50,7 @@
         "bannableTerms": {
             "enabled": false,
             "terms": ["borkedy", "gorgidy", "gooeyjaw"]
-        }
+        },
+        "ignoredCategoryIds": [""]
     }
 }

@@ -1,12 +1,12 @@
 module.exports = async (client, config) => {
-    //check if Enabled, otherwise ignore module
+    // Check if Enabled, otherwise ignore module
     if (config.enabled === true) {
-        //confirm Reaction Roles module loaded
+        // Confirm Reaction Roles module loaded
         console.log("Reaction Roles module loaded");
+
+        // Existing logic for reaction roles
         const channelId = config.channelId;
-        //get the channel based on the channel Id specified in the config
         const channel = await client.channels.fetch(channelId);
-        //cache 100 messages back in that channel.  Used for future expansion for multiple messages
         const messages = await channel.messages.fetch({ limit: 100 });
         const specificMessageId = config.messageId;
         const roleNames = config.roleNames;
@@ -19,9 +19,8 @@ module.exports = async (client, config) => {
             );
         }
 
-        //getting the specific message from the cache to be used for reactions.  Message ID does not change if message is edited.
+        // Getting the specific message from the cache to be used for reactions
         const messageToReact = messages.get(specificMessageId);
-        //one message is matched from messageId and found, react with all available emojis in reactionEmojis[]. This makes it so permissions can be added to the channel for users to not add their own emoji's, but only react using existing.
         if (messageToReact) {
             for (const emoji of reactionEmojis) {
                 await messageToReact.react(emoji);
@@ -30,54 +29,57 @@ module.exports = async (client, config) => {
             console.log("Message to react not found in the cached messages.");
         }
 
-        //when a user adds an emoji to the message, cycle through all emoji's in the reactionEmojis[] array for a match.  Use reactionEmoji[index] to assign appropriate roleName[index]
-        client.on("messageReactionAdd", async (reaction, user) => {
-            if (reaction.message.id !== specificMessageId) return;
+        // Additional variables for rules agreement
+        const rulesMessageId = config.rulesMessageId;
+        // Skip rules logic if rulesMessageId is not provided
+        if (rulesMessageId) {
+            const rulesChannelId = config.rulesChannelId || channelId;
+            const rulesEmoji = config.rulesEmoji;
+            const rulesRoleId = config.rulesRoleId;
 
-            reactionEmojis.forEach(async (emoji, index) => {
-                if (reaction.emoji.name === emoji) {
-                    const roleName = roleNames[index];
-                    const role = reaction.message.guild.roles.cache.find(
-                        (r) => r.name === roleName
-                    );
+            const rulesChannel = await client.channels.fetch(rulesChannelId);
+            const rulesMessages = await rulesChannel.messages.fetch({ limit: 100 });
+            const rulesMessageToReact = rulesMessages.get(rulesMessageId);
+
+            if (rulesMessageToReact) {
+                await rulesMessageToReact.react(rulesEmoji);
+            } else {
+                console.log("Rules message to react not found in the cached messages.");
+            }
+
+            // Reaction add event for rules agreement
+            client.on("messageReactionAdd", async (reaction, user) => {
+                if (reaction.message.id !== rulesMessageId) return;
+
+                if (reaction.emoji.name === rulesEmoji) {
+                    const role = reaction.message.guild.roles.cache.get(rulesRoleId);
                     if (!role) {
-                        console.log(`Role "${roleName}" not found`);
+                        console.log(`Rules role not found`);
                         return;
                     }
 
-                    const member = await reaction.message.guild.members.fetch(
-                        user.id
-                    );
+                    const member = await reaction.message.guild.members.fetch(user.id);
                     member.roles.add(role).catch(console.error);
-                    console.log(`Role "${roleName}" added to user ${user.tag}`);
+                    console.log(`Rules role added to user ${user.tag}`);
                 }
             });
-        });
 
-        //same for action above, but in reverse.
-        client.on("messageReactionRemove", async (reaction, user) => {
-            if (reaction.message.id !== specificMessageId) return;
+            // Reaction remove event for rules agreement
+            client.on("messageReactionRemove", async (reaction, user) => {
+                if (reaction.message.id !== rulesMessageId) return;
 
-            reactionEmojis.forEach(async (emoji, index) => {
-                if (reaction.emoji.name === emoji) {
-                    const roleName = roleNames[index];
-                    const role = reaction.message.guild.roles.cache.find(
-                        (r) => r.name === roleName
-                    );
+                if (reaction.emoji.name === rulesEmoji) {
+                    const role = reaction.message.guild.roles.cache.get(rulesRoleId);
                     if (!role) {
-                        console.log(`Role "${roleName}" not found`);
+                        console.log(`Rules role not found`);
                         return;
                     }
 
-                    const member = await reaction.message.guild.members.fetch(
-                        user.id
-                    );
+                    const member = await reaction.message.guild.members.fetch(user.id);
                     member.roles.remove(role).catch(console.error);
-                    console.log(
-                        `Role "${roleName}" removed from user ${user.tag}`
-                    );
+                    console.log(`Rules role removed from user ${user.tag}`);
                 }
             });
-        });
+        }
     }
 };
