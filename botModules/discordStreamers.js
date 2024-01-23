@@ -7,13 +7,16 @@ module.exports = async (client, config) => {
 
         console.log("Discord Streamers module loaded");
         const roleId = config.roleId;
-        const specialRoleId = config.specialRoleId; // Additional role for special shoutouts
-        const inactiveRoleId = config.inactiveRoleId; // Role ID for inactive members
+        const specialRoleId = config.specialRoleId;
+        const modRoleId = config.modRoleId; // New role ID for mods
+        const inactiveRoleId = config.inactiveRoleId;
         const announcementChannelId = config.channelId;
-        const specialAnnouncementChannelId = config.specialChannelId; // Channel for special shoutouts
-        const guild = client.guilds.cache.first(); // Assuming the bot is in one guild
+        const specialAnnouncementChannelId = config.specialChannelId;
+        const modAnnouncementChannelId = config.modChannelId; // New channel ID for mod shoutouts
+        const guild = client.guilds.cache.first();
         const announcementChannel = await client.channels.fetch(announcementChannelId);
-        const specialAnnouncementChannel = specialRoleId ? await client.channels.fetch(specialAnnouncementChannelId) : null; // Fetch channel only if specialRoleId is set
+        const specialAnnouncementChannel = specialRoleId ? await client.channels.fetch(specialAnnouncementChannelId) : null;
+        const modAnnouncementChannel = modRoleId ? await client.channels.fetch(modAnnouncementChannelId) : null; // Fetch channel for mod shoutouts
 
         let db;
         try {
@@ -25,68 +28,70 @@ module.exports = async (client, config) => {
             return;
         }
 
-        const streamCollection = db.collection("streams"); // Collection for tracking streams
+        const streamCollection = db.collection("streams");
 
         setInterval(async () => {
-
             try {
-                await guild.members.fetch(); // Fetch all members of the guild
+                await guild.members.fetch();
 
                 guild.members.cache
-                    .filter((member) => member.roles.cache.has(roleId))
+                    .filter((member) => member.roles.cache.has(roleId) || (modRoleId && member.roles.cache.has(modRoleId)))
                     .forEach(async (member) => {
-                        // Skip members with the inactive role, if the role ID is provided
                         if (inactiveRoleId && member.roles.cache.has(inactiveRoleId)) {
                             return;
                         }
 
                         const twitchStream = member.presence?.activities.find(
-                            (activity) =>
-                                activity.type === ActivityType.Streaming
+                            (activity) => activity.type === ActivityType.Streaming
                         );
 
                         if (twitchStream) {
                             const existingStream = await streamCollection.findOne({ memberId: member.id });
-                        
-                            // If the member is streaming and not already announced
+
                             if (!existingStream) {
                                 const baseMessageContent = `<@&${roleId}>\n**${member.user.tag}** is currently streaming on **${twitchStream.name}** \n\n *${twitchStream.details}*\n\nStop by now at ${twitchStream.url} !`;
-                        
-                                // Determine the appropriate channel for shoutout
+
                                 let targetChannel;
-                                let isSpecialShoutout = false;
-                                if (specialRoleId && member.roles.cache.has(specialRoleId) && specialAnnouncementChannel) {
+                                let shoutoutType = '';
+
+                                if (modRoleId && member.roles.cache.has(modRoleId) && modAnnouncementChannel) {
+                                    targetChannel = modAnnouncementChannel;
+                                    shoutoutType = 'mod';
+                                } else if (specialRoleId && member.roles.cache.has(specialRoleId) && specialAnnouncementChannel) {
                                     targetChannel = specialAnnouncementChannel;
-                                    isSpecialShoutout = true;
+                                    shoutoutType = 'special';
                                 } else {
                                     targetChannel = announcementChannel;
                                 }
-                        
-                                // Send the shoutout message
-                                const sentMessage = await targetChannel.send(isSpecialShoutout ? `🌟 Featured Streamer Alert! 🌟\n${baseMessageContent}` : baseMessageContent);
-                        
+
+                                // Send the shoutout message based on type
+                                let sentMessage;
+                                if (shoutoutType === 'mod') {
+                                    sentMessage = await targetChannel.send(`🔧 Mod Streamer Alert! 🔧\n${baseMessageContent}`);
+                                } else if (shoutoutType === 'special') {
+                                    sentMessage = await targetChannel.send(`🌟 Featured Streamer Alert! 🌟\n${baseMessageContent}`);
+                                } else {
+                                    sentMessage = await targetChannel.send(baseMessageContent);
+                                }
+
                                 await streamCollection.insertOne({
                                     memberId: member.id,
                                     messageId: sentMessage.id,
                                     streamUrl: twitchStream.url,
+                                    shoutoutType: shoutoutType
                                 });
                             }
                         } else {
-                            // If the member was streaming but is no longer streaming
-                            const existingStream = await streamCollection.findOne(
-                                { memberId: member.id }
-                            );
+                            const existingStream = await streamCollection.findOne({ memberId: member.id });
                             if (existingStream) {
                                 await announcementChannel.messages
                                     .fetch(existingStream.messageId)
                                     .then((message) => {
-                                        message.delete(); // Or edit to indicate stream has ended
+                                        message.delete();
                                     })
                                     .catch(console.error);
 
-                                await streamCollection.deleteOne({
-                                    memberId: member.id,
-                                });
+                                await streamCollection.deleteOne({ memberId: member.id });
                             }
                         }
                     });

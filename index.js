@@ -1,7 +1,6 @@
 // Importing configuration and required libraries
 const config = require("./config.json");
 const { Client, GatewayIntentBits } = require("discord.js");
-const { OpenAIApi } = require("openai");
 
 // Importing bot modules
 const reactionRoles = require("./botModules/reactionRoles");

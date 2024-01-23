@@ -18,13 +18,15 @@
         "enabled": false,
         "roleId": "ENTER ROLE ID FOR STREAMERS",
         "channelId": "ENTER ANNOUNCEMENT CHANNEL ID",
-        "specialRoleId": "ENTER ROLE ID (COMBO WITH STREAMERS ID) - LEAVE EMPTY IF UNUSED",
-        "specialChannelId": "ENTER SPECIAL ANNOUNCEMENT CHANNEL ID",
+        "modRoleId": "ENTER ROLE ID FOR MODS",
+        "modChannelId": "ENTER ANNOUNCEMENT CHANNEL ID",
+        "specialRoleId": "ENTER ROLE ID FOR FEATURED STREAMERS",
+        "specialChannelId": "ENTER ANNOUNCEMENT CHANNEL ID",
         "inactiveRoleId": "ENTER ROLE ID TO BE IGNORED FROM DISCORD STREAMERS"
     },
     "diceRoll": {
         "enabled": false,
-        "channelId": "UNUSED AT THIS TIME"
+        "channelId": "ENTER SPECIFIC CHANNEL ID"
     },
     "xpRoles": {
         "enabled": false,
@@ -39,7 +41,7 @@
         "enabled": false,
         "chatChannelId": "YOUR_DISCORD_CHANNEL_ID",
         "openAIKey": "YOUR_OPENAI_API_KEY",
-        "personality": "Snarky"
+        "personality": "Pleasantly Helpful"
     },
     "autoMod": {
         "enabled": false,
