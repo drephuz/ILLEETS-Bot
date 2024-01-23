@@ -1,6 +1,6 @@
-#ILLEETS
-##An open source Discord bot project
-###Description
+# ILLEETS
+## An open source Discord bot project
+### Description
 *...please be gentle...*
 
 This project was designed around relearning JavaScript, and getting familiar with Node.js and 
@@ -11,12 +11,12 @@ This isn't Open Source Licensed or anything fancy, just a project.  Take it and 
 
 ---------------------------------------------------------------------------------------------------
 
-###Tested OS:
+### Tested OS:
 Ubuntu Server 20 LTS
 
 ---------------------------------------------------------------------------------------------------
 
-###Prerequisites:
+### Prerequisites:
 
 **Node.js 20**
 
@@ -34,7 +34,7 @@ Ubuntu Server 20 LTS
 
 ------------------------------------------------------------------------------------------------------
 
-###Getting Started
+### Getting Started
 
 __**NOTE:**__ *YOU MUST RENAME `config-new.json` TO `config.json` AND PROVIDE YOUR BOT KEY AND ADDITIONAL CONFIGURATIONS, INCLUDING ENABLING EACH MODULE.  ALL MODULES ARE DISABLED BY DEFAULT, AND ONLY CONNECTION IS TESTED.*
 
@@ -54,7 +54,7 @@ __**NOTE:**__ *YOU MUST RENAME `config-new.json` TO `config.json` AND PROVIDE YO
 
 ------------------------------------------------------------------------------------------------------
 
-###Current Features
+### Current Features
 
 **AutoMod**: 
 
