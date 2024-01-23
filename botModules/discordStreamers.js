@@ -46,24 +46,28 @@ module.exports = async (client, config) => {
                         );
 
                         if (twitchStream) {
-                            const existingStream = await streamCollection.findOne(
-                                { memberId: member.id }
-                            );
-
+                            const existingStream = await streamCollection.findOne({ memberId: member.id });
+                        
                             // If the member is streaming and not already announced
                             if (!existingStream) {
                                 const baseMessageContent = `<@&${roleId}>\n**${member.user.tag}** is currently streaming on **${twitchStream.name}** \n\n *${twitchStream.details}*\n\nStop by now at ${twitchStream.url} !`;
-                                await announcementChannel.send(baseMessageContent);
-
-                                // Special shoutout for members with the special role, if specialRoleId is set
+                        
+                                // Determine the appropriate channel for shoutout
+                                let targetChannel;
+                                let isSpecialShoutout = false;
                                 if (specialRoleId && member.roles.cache.has(specialRoleId) && specialAnnouncementChannel) {
-                                    const specialMessageContent = `🌟 Featured Streamer Alert! 🌟\n${baseMessageContent}`;
-                                    await specialAnnouncementChannel.send(specialMessageContent);
+                                    targetChannel = specialAnnouncementChannel;
+                                    isSpecialShoutout = true;
+                                } else {
+                                    targetChannel = announcementChannel;
                                 }
-
+                        
+                                // Send the shoutout message
+                                const sentMessage = await targetChannel.send(isSpecialShoutout ? `🌟 Featured Streamer Alert! 🌟\n${baseMessageContent}` : baseMessageContent);
+                        
                                 await streamCollection.insertOne({
                                     memberId: member.id,
-                                    messageId: message.id,
+                                    messageId: sentMessage.id,
                                     streamUrl: twitchStream.url,
                                 });
                             }
