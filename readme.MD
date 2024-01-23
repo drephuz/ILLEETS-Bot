@@ -66,6 +66,8 @@ __**NOTE:**__ *YOU MUST RENAME `config-new.json` TO `config.json` AND PROVIDE YO
 
 - Bannable Terms spoken by any member will result in the message being deleted, and a ban message being sent to chat.  Non-Mods will be given a ban.
 
+- Ignored channel ID is configurable for the Blocked Terms list, but if the **Bannable Terms** list is ***enabled***, it is **GLOBAL**
+
 - **Warnings** have *5 stages*
   - **Warning 1-2:** *Timeout for 60 seconds*
   - **Warning 3-4:** *Timeout for 60 minutes*
