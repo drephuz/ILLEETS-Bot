@@ -29,8 +29,10 @@ const updateMemberRoles = async (guildId, memberId, xp) => {
 
     // Determine new role based on XP
     let newRoleName = "";
+    let isLowestTier = false; // Flag to check if the role is the lowest tier
     if (xp >= 0 && xp <= 5) {
         newRoleName = roleNames[0];
+        isLowestTier = true; // Set flag true for lowest tier role
     } else if (xp >= 6 && xp <= 500) {
         newRoleName = roleNames[1];
     } else if (xp >= 501 && xp <= 1499) {
@@ -49,7 +51,11 @@ const updateMemberRoles = async (guildId, memberId, xp) => {
     
     if (roleToAdd) {
         await member.roles.add(roleToAdd).catch(console.error);
-        await announceRoleChange(guild, member, `you have gained the ${roleToAdd.name} role!`);
+
+        // Only announce role change if it's not the lowest tier
+        if (!isLowestTier) {
+            await announceRoleChange(guild, member, `you have gained the ${roleToAdd.name} role!`);
+        }
 
         for (const roleName of rolesToRemove) {
             const roleToRemove = guild.roles.cache.find(role => role.name === roleName);

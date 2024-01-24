@@ -10,6 +10,7 @@
         "messageId": "ENTER SPECIFIC MESSAGE ID FOR REACTION ROLES",
         "rulesChannelId": "",
         "rulesRoleId": "",
+        "rulesMessageId": "",
         "rulesEmoji": "",
         "roleNames": ["ROLE1", "ROLE2"],
         "reactionEmojis": ["👍", "👎"]
@@ -39,7 +40,7 @@
     },
     "openAiResponses": {
         "enabled": false,
-        "chatChannelId": "YOUR_DISCORD_CHANNEL_ID",
+        "channelId": "YOUR_DISCORD_CHANNEL_ID",
         "openAIKey": "YOUR_OPENAI_API_KEY",
         "personality": "Pleasantly Helpful"
     },
