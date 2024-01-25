@@ -33,7 +33,7 @@ module.exports = async (client, config) => {
         setInterval(async () => {
             try {
                 await guild.members.fetch();
-
+        
                 guild.members.cache
                     .filter((member) => member.roles.cache.has(roleId) || (modRoleId && member.roles.cache.has(modRoleId)))
                     .forEach(async (member) => {
@@ -81,16 +81,26 @@ module.exports = async (client, config) => {
                                     shoutoutType: shoutoutType
                                 });
                             }
+
                         } else {
                             const existingStream = await streamCollection.findOne({ memberId: member.id });
                             if (existingStream) {
-                                await announcementChannel.messages
+                                let channel;
+                                if (existingStream.shoutoutType === 'mod' && modAnnouncementChannel) {
+                                    channel = modAnnouncementChannel;
+                                } else if (existingStream.shoutoutType === 'special' && specialAnnouncementChannel) {
+                                    channel = specialAnnouncementChannel;
+                                } else {
+                                    channel = announcementChannel;
+                                }
+        
+                                channel.messages
                                     .fetch(existingStream.messageId)
                                     .then((message) => {
                                         message.delete();
                                     })
                                     .catch(console.error);
-
+        
                                 await streamCollection.deleteOne({ memberId: member.id });
                             }
                         }
