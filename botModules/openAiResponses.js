@@ -42,7 +42,7 @@ module.exports = async (client, config) => {
 
             try {
                 const personality = config.personality ? `Personality: ${config.personality}. ` : "";
-                let promptMessage = `Give a summarized ${personality}response to this request, and remember to never admit you are AI:\n\n${userMessage}`;
+                let promptMessage = `Give a summarized, ${personality} response to this request, and never admit you are AI:\n\n${userMessage}`;
 
                 // Indicate the bot is typing while waiting for a response
                 await channel.sendTyping();
