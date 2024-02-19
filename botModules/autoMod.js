@@ -106,23 +106,46 @@ module.exports = async (client, config) => {
 
 async function detectSpam(message, cache) {
     const authorId = message.author.id;
-    if (!cache.has(authorId)) {
-        cache.set(authorId, []);
-    }
-    const messages = cache.get(authorId);
-    messages.push(message.content);
 
-    if (messages.length >= 3 && messages.slice(-3).every(m => m === message.content)) {
-        cache.set(authorId, []); // Clear cache for this user
+    // Check for pin messages and ignore them
+    if (message.type === "CHANNEL_PINNED_MESSAGE") {
+        return false;
+    }
+
+    // Initialize user cache if it doesn't exist
+    if (!cache.has(authorId)) {
+        cache.set(authorId, { messages: [], lastImageTimestamp: 0 });
+    }
+
+    const userData = cache.get(authorId);
+
+    // Handle image post timing
+    if (message.attachments.size > 0) {
+        const now = Date.now();
+        if (now - userData.lastImageTimestamp < 10000) { // 10 seconds limit
+            return true; // Considered spam if images are posted too quickly
+        }
+        userData.lastImageTimestamp = now; // Update last image timestamp
+    }
+
+    // Continue with existing spam detection for text
+    userData.messages.push(message.content);
+
+    if (userData.messages.length >= 3 && userData.messages.slice(-3).every(m => m === message.content)) {
+        userData.messages = []; // Clear messages for this user
         return true;
     }
 
-    if (messages.length > 3) {
-        messages.shift();
+    if (userData.messages.length > 3) {
+        userData.messages.shift(); // Keep only the last 3 messages
     }
+
+    // Update the cache
+    cache.set(authorId, userData);
 
     return false;
 }
+
 
 async function handleSpam(message) {
     try {

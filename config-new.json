@@ -55,5 +55,9 @@
             "terms": ["borkedy", "gorgidy", "gooeyjaw"]
         },
         "ignoredCategoryIds": [""]
+    },
+    "welcomeBot": {
+        "enabled": false,
+        "channelId": "UNUSED AT THIS TIME"
     }
 }
